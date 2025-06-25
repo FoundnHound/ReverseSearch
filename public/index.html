@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World</title>
+</head>
+<body>
+  <h1>Hello World/h1>
+
+  <p>Click to get a message from the backend:</p>
+  <button onclick="getBackendMessage()">Call Backend</button>
+
+  <p id="backend-message"></p>
+
+  <script>
+    function getBackendMessage() {
+      fetch('/api/hello')
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById('backend-message').innerText = data;
+        });
+    }
+  </script>
+</body>
+</html>
