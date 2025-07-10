@@ -1,40 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Hello World</title>
 
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="style.css">
-  <title>Hello World</title>
+  </head>
+  <body>
+    <h1>Hello World from frontend</h1>
 
-</head>
+    <p>Click to get a message from the backend</p>
+    <button onclick="getBackendMessage()">Call Backend</button>
 
-<body>
-  <h1>Hello World from frontend</h1>
+    <p id="backend-message"></p>
 
-  <p>Click to get a message from the backend</p>
-  <button onclick="getBackendMessage()">Call Backend</button>
+    <h1> Here is where you should be able to enter your description of the unknown word</h1>
+    <textarea id="description" rows="10" cols="100" placeholder="Enter your description here..."></textarea>
+    <br>
 
-  <p id="backend-message"></p>
+    <button onclick="meansLikeSearch()"> Button to Call API to retreive proposed answers utilizing a 'means like' search </button>
+    <br> 
 
-  <h1> Here is where you should be able to enter your description of the unknown word</h1>
-  <textarea id="description" rows="10" cols="100" placeholder="Enter your description here..."></textarea>
-  <br>
+    <div id="results"></div>
+    <p>
+      Created By FoundnHound
+    </p>
+    <script src="functions.js"></script>
+  </body>
 
-  <button> Button to Call API to retreive proposed answers </button>
-
-  <br> 
-  <p>
-    Created by Team FoundnHound
-  </p>
-  <script>
-    function getBackendMessage() {
-      fetch('/api/hello')
-        .then(res => res.text())
-        .then(data => {
-          document.getElementById('backend-message').innerText = data;
-        });
-    }
-  </script>
-</body>
-
-</html>
+  </html>
