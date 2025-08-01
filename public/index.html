@@ -2,26 +2,51 @@
   <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Hello World</title>
 
   </head>
   <body>
-    <h1>Hello World from frontend</h1>
-
-    <p>Click to get a message from the backend</p>
-    <button onclick="getBackendMessage()">Call Backend</button>
+    <h1>What's that word?</h1>
 
     <p id="backend-message"></p>
 
-    <h1> Here is where you should be able to enter your description of the unknown word</h1>
-    <textarea id="description" rows="10" cols="100" placeholder="Enter your description here..."></textarea>
+    
+    <textarea id="description" rows="10" cols="100" placeholder="Click on the searches to get examples on how to use them..."></textarea>
+    <p id="error-message" style="font-size:0.9em; color: red;"></p>
+    <p id="input-hint" style="font-size: 0.9em; color: #555;"></p>
+
     <br>
 
-    <button onclick="meansLikeSearch()"> Button to Call API to retreive proposed answers utilizing a 'means like' search </button>
+    <div class="button-group">
+      <button onclick="updateInputHint('meansLike'); meansLikeSearch()">Similar Meaning Search</button>
+      <button onclick="updateInputHint('soundsLike'); soundsLikeSearch()">Sounds Like Search</button>
+      <button onclick="updateInputHint('adjective'); adjectiveSearch()">Adjective Search</button>
+      <button onclick="updateInputHint('noun'); nounSearch()">Noun Search</button>
+    </div>
+    <button onclick="clearResults()">Clear Results</button>
+
     <br> 
 
     <div id="results"></div>
+
+    <div id="Instructions">
+      <h2>How to Use the Searches</h2>
+      <p><strong>Similar Meaning Search:</strong> Enter a brief description of a concept or word you can’t recall. Example: “ringing in the ears” might return <em>tinnitus</em>.</p>
+
+      <p><strong>Sounds Like Search:</strong> Type in how the word sounds, even if you’re not sure of the spelling. Example: “nife” could return <em>knife</em>.</p>
+
+      <p><strong>Adjective Search:</strong> Enter a noun to find adjectives commonly used to describe it. Example: Enter “ocean” and get <em>vast</em>, <em>salty</em>, <em>blue</em>.</p>
+
+      <p><strong>Noun Search:</strong> Enter an adjective to find nouns commonly described with it. Example: Enter “fluffy” and get <em>pillow</em>, <em>bunny</em>, <em>cloud</em>.</p>
+    </div>
+
+    <h1>Reveal the word of the day</h1>
+
+    <button onclick="getWordOfTheDay()">Get Word of the Day</button>
+
+    <div id="word-of-the-day"></div>
     <p>
       Created By FoundnHound
     </p>

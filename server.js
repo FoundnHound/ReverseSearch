@@ -1,25 +1,115 @@
 const express = require('express');
 const datamuse = require('datamuse');
 const functions = require('./public/functions.js')
+const rateLimit = require('express-rate-limit');
+require('dotenv').config();
+
 const app = express();
 const port = 4000;
 
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: 'Too many requests, please try again later.'
+});
+
 app.use(express.json());
 app.use(express.static('public'));
+app.use(limiter);
 
 app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello, World! from Backend' });
-    });
+});
 
-app.listen(port, () => {
-    console.log('Server is running on http://localhost:' + port);
+app.get('/api/wordOfTheDay', (req, res) => {
+  const apiKey = process.env.WORDNIK_API_KEY;
+  const url = `https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=${apiKey}`;
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      res.json({
+        word: data.word
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching word of the day:', error);
+      res.status(500).json({ error: 'Failed to fetch word of the day' });
+    });
 });
 
 app.post('/api/meansLike', (req, res) => {
   const text = req.body.text;
   console.log(req.body.text);
+
+  if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+  text_scrub = text.replace(/[^a-zA-Z\s]/g, '');
   datamuse.words({
-    ml: text
+    ml: text_scrub
+  })
+    .then(result => {
+      res.json({ result });
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Datamuse API failed', details: err.message });
+    });
+});
+
+app.post('/api/soundsLike', (req, res) => {
+  const text = req.body.text;
+  console.log(req.body.text);
+
+  if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+  text_scrub = text.replace(/[^a-zA-Z\s]/g, '');
+  datamuse.words({
+    sl: text_scrub
+  })
+    .then(result => {
+      res.json({ result });
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Datamuse API failed', details: err.message });
+    });
+});
+
+app.post('/api/adjectiveThatDescribes', (req, res) => {
+  const text = req.body.text;
+  console.log(req.body.text);
+
+  if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+  text_scrub = text.replace(/[^a-zA-Z\s]/g, '');
+  datamuse.words({
+    rel_jjb: text_scrub
+  })
+    .then(result => {
+      res.json({ result });
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Datamuse API failed', details: err.message });
+    });
+});
+
+app.post('/api/nounsThatAreDescribedBy', (req, res) => {
+  const text = req.body.text;
+  console.log(req.body.text);
+
+  if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+  text_scrub = text.replace(/[^a-zA-Z\s]/g, '');
+  datamuse.words({
+    rel_jja: text_scrub
   })
     .then(result => {
       res.json({ result });
@@ -31,21 +121,40 @@ app.post('/api/meansLike', (req, res) => {
 
 app.post('/api/defineWord', (req, res) => {
   const word = req.body.word;
-  console.log('https://api.dictionaryapi.dev/api/v2/entries/en/');
-  const url  = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
-  fetch(url)
-    .then(r => {
-      if (!r.ok) throw new Error('Not found');
-      return r.json();
-    })
-    .then(entries => {
-      const entry = entries[0] || {};
-      const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
-      const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || '';
-      res.json({ word, phonetic, definition });
-    })
-    .catch(err => {
-      console.error('Dictionary proxy error:', err);
-      res.status(502).json({ error: 'Dictionary fetch failed' });
-    });
+
+  if (typeof word !== 'string' || word.length === 0 || word.length > 100) {
+    return res.status(400).json({ error: 'Invalid word input' });
+  }
+
+  word_scrub = word.replace(/[^a-zA-Z\s]/g, '');
+  const dictionary_api_url  = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word_scrub)}`;
+  const wordnik_api_url = `https://api.wordnik.com/v4/word.json/${encodeURIComponent(word_scrub)}/definitions?limit=1&includeRelated=false&useCanonical=true&sourceDictionaries=all&api_key=${process.env.WORDNIK_API_KEY}`;
+
+  fetch(dictionary_api_url)
+      .then(r => {
+        if (!r.ok) throw new Error('Not found in dictionary API attempting Wordnik');
+        return r.json();
+      })
+      .catch(() => {
+        return fetch(wordnik_api_url).then(r2 => {
+          if (!r2.ok) throw new Error('Not found in Wordnik API');
+          return r2.json();
+        });
+      })
+      .then(entries => {
+        const entry = entries[0] || {};
+        const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
+        const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || '';
+        res.json({ word, phonetic, definition });
+      })
+      .catch(err => {
+        console.error('Dictionary proxy error:', err);
+        res.status(502).json({ error: 'Dictionary fetch failed' });
+      });
 });
+
+if (require.main === module) {
+  app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+}
+
+module.exports = app;

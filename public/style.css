@@ -1,36 +1,43 @@
 body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      text-align: center;
-    }
-    h1 {
-      color: #333;
-    }
-    button {
-      padding: 10px 15px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    textarea {
-      width: 95%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
+  font-family: Arial, sans-serif;
+  margin: 2em;
+  text-align: center;
+}
+h1 {
+  color: #333;
+}
+button {
+  padding: 0.8em 1em;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: .85em;
+}
+button:hover {
+  background-color: #0056b3;
+}
+textarea {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 1000px;
+  font-size: 1.5em;
+}
 .result-item {
   border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 15px;
+  text-align: center; 
+  padding: 1em;
+  margin-bottom: 1em;
+  margin: 15px auto;  
   background-color: #f8f8f8;
+  max-width: 700px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  animation: fadeInUp 0.4s ease forwards;
 }
 
 .definition {
@@ -43,4 +50,84 @@ body {
 .define-button {
   margin-top: 5px;
   padding: 5px 10px;
+  position: relative;
+}
+
+#Instructions {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f0f8ff;
+  border: 1px solid #cce;
+  border-radius: 8px;
+  text-align: left;
+  display: inline-block;
+  max-width: 800px;
+}
+
+#Instructions h2 {
+  color: #007BFF;
+  margin-bottom: 10px;
+}
+
+#Instructions p {
+  margin: 10px 0;
+  font-size: 0.95em;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.button-group button {
+  flex: 1 1 150px; 
+  max-width: 200px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+  margin: 1em;
+  }
+
+  h1 {
+  font-size: 1.5em;
+  }
+
+  textarea {
+  font-size: 0.9em;
+  }
+
+  button {
+  font-size: 0.95em;
+  padding: 0.7em 1em;
+  }
+
+  #Instructions {
+  font-size: 0.9em;
+  padding: 0.8em;
+  }
+
+  .button-group {
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .button-group button {
+  width: 100%;
+  max-width: none;
+  }
 }
