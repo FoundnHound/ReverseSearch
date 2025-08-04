@@ -8,7 +8,7 @@ const app = express();
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 10, // Limit each IP to 10 requests per windowMs
+  max: 50, // Limit each IP to 10 requests per windowMs
   message: 'Too many requests, please try again later.'
 });
 
@@ -127,30 +127,41 @@ app.post('/api/defineWord', (req, res) => {
 
   word_scrub = word.replace(/[^a-zA-Z\s]/g, '');
   const dictionary_api_url  = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word_scrub)}`;
-  const wordnik_api_url = `https://api.wordnik.com/v4/word.json/${encodeURIComponent(word_scrub)}/definitions?limit=1&includeRelated=false&useCanonical=true&sourceDictionaries=all&api_key=${process.env.WORDNIK_API_KEY}`;
+  const wordnik_api_url = `https://api.wordnik.com/v4/word.json/${encodeURIComponent(word_scrub)}/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false&api_key=${process.env.WORDNIK_API_KEY}`;
 
-  fetch(dictionary_api_url)
-      .then(r => {
-        if (!r.ok) throw new Error('Not found in dictionary API attempting Wordnik');
-        return r.json();
-      })
-      .catch(() => {
-        return fetch(wordnik_api_url).then(r2 => {
-          if (!r2.ok) throw new Error('Not found in Wordnik API');
-          return r2.json();
-        });
-      })
-      .then(entries => {
-        const entry = entries[0] || {};
-        const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
-        const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || '';
-        res.json({ word, phonetic, definition });
-      })
-      .catch(err => {
-        console.error('Dictionary proxy error:', err);
-        res.status(502).json({ error: 'Dictionary fetch failed' });
+fetch(dictionary_api_url)
+    .then(r => {
+      if (!r.ok) throw new Error('Dictionary API request failed');
+      return r.json();
+    })
+    .then(data => {
+      // Check if Dictionary API returned "No Definitions Found"
+      if (data.title === 'No Definitions Found') {
+        throw new Error('No definitions found in Dictionary API');
+      }
+      return data;
+    })
+    .catch(() => {
+      // Fallback to Wordnik API
+      return fetch(wordnik_api_url).then(r2 => {
+        if (!r2.ok) throw new Error('Wordnik API request failed');
+        return r2.json();
       });
+    })
+    .then(entries => {
+      const entry = entries[0] || {};
+      // Handle Dictionary API response
+      const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
+      const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || entry.text || '';
+      res.json({ word, phonetic, definition });
+    })
+    .catch(err => {
+      console.error('Dictionary proxy error:', err);
+      res.status(502).json({ error: 'Dictionary fetch failed' });
+    });
 });
+
+
 
 if (require.main === module) {
   app.listen(3000, () => console.log('Server running on http://localhost:3000'));

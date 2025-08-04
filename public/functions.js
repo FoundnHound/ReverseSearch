@@ -229,7 +229,7 @@ function fetchDefinition(word, container) {
     })
     .catch(err => {
       console.error(err);
-      container.innerHTML = `<em>Failed to fetch definition</em>`;
+      container.innerHTML = `<em>Failed to fetch definition. Too many requests please wait</em>`;
     });
 }
 
