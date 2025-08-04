@@ -233,32 +233,62 @@ function fetchDefinition(word, container) {
     });
 }
 
-function getWordOfTheDay() {
-  fetch('/api/wordOfTheDay')
+function defineWord() {
+  const text = document.getElementById('description').value; // textarea input
+  const error = document.getElementById('error-message');
+  error.textContent = ''; // Clear previous error message
+  if (text.split(/\s+/).length > 1) {
+    error.textContent = "Please enter only a single word for this search.";
+    return;
+  }
+  clearTextArea();
+
+  fetch('/api/defineWord', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ word: text }) // Send as { word: text } to match previously defined structure
+  })
     .then(res => res.json())
     .then(data => {
-      const wordOfTheDay = document.getElementById('word-of-the-day');
-      wordOfTheDay.innerText = `Word of the Day: ${data.word}`;
+      const output = document.getElementById("results");
+      output.innerHTML = '';
 
-      const defineButton = document.createElement('button');
-      defineButton.textContent = 'Define';
-      defineButton.className = 'define-button';
+      if (data.error) {
+        error.textContent = data.error;
+        return;
+      }
 
-      const resultDiv = document.createElement('div');
-      resultDiv.className = 'definition';
+      const wordEl = document.createElement('div');
+      wordEl.className = 'result-item';
 
-      defineButton.addEventListener('click', () => {
-        fetchDefinition(data.word, resultDiv);
-      });
-      wordOfTheDay.appendChild(defineButton);
-      wordOfTheDay.appendChild(resultDiv);
+      const word = document.createElement('div');
+      word.className = 'word';
+      word.innerHTML = `<strong>${data.word}</strong>`;
+      wordEl.appendChild(word);
+
+      const defineDiv = document.createElement('div');
+      defineDiv.className = 'definition';
+      defineDiv.innerText = data.definition || 'No definition available';
+
+      if (data.phonetic) {
+        const phoneticDiv = document.createElement('div');
+        phoneticDiv.className = 'phonetic';
+        phoneticDiv.innerText = `Phonetic: ${data.phonetic}`;
+        wordEl.appendChild(phoneticDiv);
+      }
+
+      wordEl.appendChild(defineDiv);
+      output.appendChild(wordEl);
+
+      // Auto-scroll to results
+      output.scrollIntoView({ behavior: 'smooth' });
     })
     .catch(err => {
-      console.error('Error fetching word of the day:', err);
-      const wordOfTheDay = document.getElementById('word-of-the-day');
-      wordOfTheDay.innerText = 'Failed to fetch word of the day';
+      console.error('Fetch error:', err);
+      error.textContent = 'Failed to fetch definition';
     });
 }
+
 
 function clearResults() {
   const output = document.getElementById("results");

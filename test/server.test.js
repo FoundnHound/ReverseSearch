@@ -17,12 +17,6 @@ describe('API Endpoints', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('definition');
   });
-  /*it('GET /api/wordOfTheDay returns word of the day', async () => {
-      const res = await request(app)
-        .get('/api/wordOfTheDay');
-      expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('word');
-  });*/
   it('POST /api/soundsLike returns array of words', async () => {
         const res = await request(app)
           .post('/api/soundsLike')

@@ -20,28 +20,6 @@ app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello, World! from Backend' });
 });
 
-app.get('/api/wordOfTheDay', (req, res) => {
-  const apiKey = process.env.WORDNIK_API_KEY;
-  const url = `https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=${apiKey}`;
-
-  fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      res.json({
-        word: data.word
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching word of the day:', error);
-      res.status(500).json({ error: 'Failed to fetch word of the day' });
-    });
-});
-
 app.post('/api/meansLike', (req, res) => {
   const text = req.body.text;
   console.log(req.body.text);
@@ -129,36 +107,36 @@ app.post('/api/defineWord', (req, res) => {
   const dictionary_api_url  = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word_scrub)}`;
   const wordnik_api_url = `https://api.wordnik.com/v4/word.json/${encodeURIComponent(word_scrub)}/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false&api_key=${process.env.WORDNIK_API_KEY}`;
 
-fetch(dictionary_api_url)
-    .then(r => {
-      if (!r.ok) throw new Error('Dictionary API request failed');
-      return r.json();
-    })
-    .then(data => {
-      // Check if Dictionary API returned "No Definitions Found" (dictionary api returned but no definition)
-      if (data.title === 'No Definitions Found') {
-        throw new Error('No definitions found in Dictionary API');
-      }
-      return data;
-    })
-    .catch(() => {
-      // Fallback to Wordnik API
-      return fetch(wordnik_api_url).then(r2 => {
-        if (!r2.ok) throw new Error('Wordnik API request failed');
-        return r2.json();
+  fetch(dictionary_api_url)
+      .then(r => {
+        if (!r.ok) throw new Error('Dictionary API request failed');
+        return r.json();
+      })
+      .then(data => {
+        // Check if Dictionary API returned "No Definitions Found" (dictionary api returned but no definition)
+        if (data.title === 'No Definitions Found') {
+          throw new Error('No definitions found in Dictionary API');
+        }
+        return data;
+      })
+      .catch(() => {
+        // Fallback to Wordnik API
+        return fetch(wordnik_api_url).then(r2 => {
+          if (!r2.ok) throw new Error('Wordnik API request failed');
+          return r2.json();
+        });
+      })
+      .then(entries => {
+        const entry = entries[0] || {};
+        // Handle api response
+        const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
+        const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || entry.text || '';
+        res.json({ word, phonetic, definition });
+      })
+      .catch(err => {
+        console.error('Dictionary proxy error:', err);
+        res.status(502).json({ error: 'Dictionary fetch failed' });
       });
-    })
-    .then(entries => {
-      const entry = entries[0] || {};
-      // Handle api response
-      const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
-      const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || entry.text || '';
-      res.json({ word, phonetic, definition });
-    })
-    .catch(err => {
-      console.error('Dictionary proxy error:', err);
-      res.status(502).json({ error: 'Dictionary fetch failed' });
-    });
 });
 
 

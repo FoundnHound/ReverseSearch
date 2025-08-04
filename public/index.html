@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <title>Hello World</title>
+    <title>Almostgotit</title>
 
   </head>
   <body>
@@ -20,13 +20,17 @@
 
     <br>
 
-    <div class="button-group">
+    <div class="reverse-search-button-group">
       <button onclick="updateInputHint('meansLike'); meansLikeSearch()">Similar Meaning Search</button>
       <button onclick="updateInputHint('soundsLike'); soundsLikeSearch()">Sounds-Like Search</button>
       <button onclick="updateInputHint('adjective'); adjectiveSearch()">Common Adjectives Search</button>
       <button onclick="updateInputHint('noun'); nounSearch()">Associated Nouns Search</button>
     </div>
-    <button onclick="clearResults()">Clear Results</button>
+
+    <div class = "clear-and-define">
+      <button onclick="clearResults()">Clear Results</button>
+      <button onclick="defineWord()">Define Word</button>
+    </div>
 
     <br> 
 

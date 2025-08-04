@@ -97,7 +97,7 @@ textarea {
   font-size: 0.95em;
 }
 
-.button-group {
+.reverse-search-button-group {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -105,7 +105,7 @@ textarea {
   margin: 10px 0;
 }
 
-.button-group button {
+.reverse-search-button-group button {
   flex: 1 1 150px; 
   max-width: 200px;
 }
@@ -144,12 +144,12 @@ textarea {
   padding: 0.8em;
   }
 
-  .button-group {
+  .reverse-search-button-group {
   flex-direction: column;
   align-items: center;
   }
 
-  .button-group button {
+  .reverse-search-button-group button {
   width: 100%;
   max-width: none;
   }
