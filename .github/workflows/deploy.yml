@@ -20,8 +20,8 @@ jobs:
 
     - name: Run Jest tests
       run: |
-        npm install -g jest
         npm install
+        npm install -g jest
         npm test
 
     - name: Deploy to EC2
