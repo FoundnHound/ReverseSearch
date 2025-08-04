@@ -135,7 +135,7 @@ fetch(dictionary_api_url)
       return r.json();
     })
     .then(data => {
-      // Check if Dictionary API returned "No Definitions Found"
+      // Check if Dictionary API returned "No Definitions Found" (dictionary api returned but no definition)
       if (data.title === 'No Definitions Found') {
         throw new Error('No definitions found in Dictionary API');
       }
@@ -150,7 +150,7 @@ fetch(dictionary_api_url)
     })
     .then(entries => {
       const entry = entries[0] || {};
-      // Handle Dictionary API response
+      // Handle api response
       const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || '';
       const definition = entry.meanings?.[0]?.definitions?.[0]?.definition || entry.text || '';
       res.json({ word, phonetic, definition });
