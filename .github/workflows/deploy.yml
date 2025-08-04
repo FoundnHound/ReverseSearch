@@ -22,6 +22,7 @@ jobs:
       run: |
         npm ci
         npm install -g jest
+        npm install
         npm test
 
     - name: Deploy to EC2
