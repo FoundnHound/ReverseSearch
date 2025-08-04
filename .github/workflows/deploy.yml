@@ -34,7 +34,6 @@ jobs:
         script: |
           cd ${{ secrets.EC2_APP_PATH }}
           git pull origin main
-          npm ci
           npm run test
-          sudo systemctl restart your-app.service
+          sudo systemctl restart myapp.service
           sudo systemctl reload caddy
