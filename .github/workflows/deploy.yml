@@ -20,7 +20,6 @@ jobs:
 
     - name: Run Jest tests
       run: |
-        npm ci
         npm install -g jest
         npm install
         npm test

@@ -25,28 +25,28 @@ function meansLikeSearch(){
       output.innerText = '';
     }
     else{
-      output.innerText = `Similar words":`;
+      output.innerHTML = `<p style="font-size: 0.9em; color: #666;">Click a word below to see its definition</p>`
+      output.innerText = `Similar words:`;
     }
 
     data.result.forEach((item, index) => {
       const wordEl = document.createElement('div');
       wordEl.className = 'result-item';
 
-      wordEl.append(item.word + '\t');
-      console.log('Word:', item.word);
-
-      const defineButton = document.createElement('button');
-      defineButton.textContent = 'define';
-      defineButton.className = 'define-button';
+      const word = document.createElement('div');
+      word.className = 'word';
+      word.innerHTML = `<strong>${item.word}</strong>`;
+      wordEl.appendChild(word);
 
       const defineDiv = document.createElement('div')
       defineDiv.className = 'definition';
 
-      defineButton.addEventListener('click', () => {
+      wordEl.addEventListener('click', () => {
+        output.querySelectorAll('.definition').forEach(el => el.innerHTML = '');
         fetchDefinition(item.word, defineDiv);
       });
+      wordEl.title = 'Click to define';
 
-      wordEl.appendChild(defineButton);
       output.appendChild(wordEl)
 
       wordEl.style.animationDelay = `${index * 0.1}s`;
@@ -60,7 +60,8 @@ function meansLikeSearch(){
 
 function soundsLikeSearch(){
   const text = document.getElementById('description').value //description is the textarea ID
-
+  const error = document.getElementById('error-message');
+  error.textContent = ''; // Clear any previous error message
   clearTextArea()
 
   fetch('/api/soundsLike', {
@@ -83,8 +84,10 @@ function soundsLikeSearch(){
       const wordEl = document.createElement('div');
       wordEl.className = 'result-item';
 
-      wordEl.append(item.word + '\t');
-      console.log('Word:', item.word);
+      const word = document.createElement('div');
+      word.className = 'word';
+      word.innerHTML = `<strong>${item.word}</strong>`;
+      wordEl.appendChild(word);
 
       wordEl.style.animationDelay = `${index * 0.1}s`;
 
@@ -97,6 +100,12 @@ function soundsLikeSearch(){
 
 function adjectiveSearch(){
   const text = document.getElementById('description').value //description is the textarea ID
+  const error = document.getElementById('error-message');
+  error.textContent = ''; // Clear any previous error message
+  if (text.split(/\s+/).length > 1) {
+    error.textContent = "Please enter only a single adjective for this search.";
+    return;
+  }
 
   clearTextArea()
 
@@ -113,20 +122,33 @@ function adjectiveSearch(){
       output.innerText = '';
     }
     else{
-      output.innerText = `Adjectives used to Describe "${text}":`;
+      output.innerText = `Common adjectives used to describe "${text}":`;
     }
 
     data.result.forEach((item, index) => {
       const wordEl = document.createElement('div');
       wordEl.className = 'result-item';
 
-      wordEl.append(item.word + '\t');
-      console.log('Word:', item.word);
+      const word = document.createElement('div');
+      word.className = 'word';
+      word.innerHTML = `<strong>${item.word}</strong>`;
+      wordEl.appendChild(word);
 
-      wordEl.style.animationDelay = `${index * 0.1}s`;
+      const defineDiv = document.createElement('div')
+      defineDiv.className = 'definition';
+
+      wordEl.addEventListener('click', () => {
+        output.querySelectorAll('.definition').forEach(el => el.innerHTML = '');
+        fetchDefinition(item.word, defineDiv);
+      });
+
+      wordEl.title = 'Click to define';
 
       output.appendChild(wordEl)
 
+      wordEl.style.animationDelay = `${index * 0.1}s`;
+
+      output.appendChild(defineDiv);
     });
     output.scrollIntoView({ behavior: 'smooth' });
   });
@@ -134,6 +156,12 @@ function adjectiveSearch(){
 
 function nounSearch(){
   const text = document.getElementById('description').value //description is the textarea ID
+  const error = document.getElementById('error-message');
+  error.textContent = ''; // Clear any previous error message
+  if (text.split(/\s+/).length > 1) {
+    error.textContent = "Please enter only a single adjective for this search.";
+    return;
+  }
 
   clearTextArea()
 
@@ -150,20 +178,32 @@ function nounSearch(){
       output.innerText = '';
     }
     else{
-      output.innerText = `Nouns that are described by "${text}":`;
+      output.innerText = `Nouns that are described by by the adjective "${text}":`;
     }
 
     data.result.forEach((item, index) => {
       const wordEl = document.createElement('div');
       wordEl.className = 'result-item';
 
-      wordEl.append(item.word + '\t');
-      console.log('Word:', item.word);
+      const word = document.createElement('div');
+      word.className = 'word';
+      word.innerHTML = `<strong>${item.word}</strong>`;
+      wordEl.appendChild(word);
 
-      wordEl.style.animationDelay = `${index * 0.1}s`;
+      const defineDiv = document.createElement('div')
+      defineDiv.className = 'definition';
+
+      wordEl.addEventListener('click', () => {
+        output.querySelectorAll('.definition').forEach(el => el.innerHTML = '');
+        fetchDefinition(item.word, defineDiv);
+      });
+      wordEl.title = 'Click to define';
 
       output.appendChild(wordEl)
 
+      wordEl.style.animationDelay = `${index * 0.1}s`;
+
+      output.appendChild(defineDiv);
     });
     output.scrollIntoView({ behavior: 'smooth' });
   });

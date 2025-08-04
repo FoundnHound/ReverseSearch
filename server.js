@@ -5,7 +5,6 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
-const port = 4000;
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute

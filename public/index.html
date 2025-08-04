@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <title>Hello World</title>
 
   </head>
   <body>
-    <h1>What's that word?</h1>
+    <h1>I Almost Have It</h1>
 
     <p id="backend-message"></p>
 
@@ -21,9 +22,9 @@
 
     <div class="button-group">
       <button onclick="updateInputHint('meansLike'); meansLikeSearch()">Similar Meaning Search</button>
-      <button onclick="updateInputHint('soundsLike'); soundsLikeSearch()">Sounds Like Search</button>
-      <button onclick="updateInputHint('adjective'); adjectiveSearch()">Adjective Search</button>
-      <button onclick="updateInputHint('noun'); nounSearch()">Noun Search</button>
+      <button onclick="updateInputHint('soundsLike'); soundsLikeSearch()">Sounds-Like Search</button>
+      <button onclick="updateInputHint('adjective'); adjectiveSearch()">Common Adjectives Search</button>
+      <button onclick="updateInputHint('noun'); nounSearch()">Associated Nouns Search</button>
     </div>
     <button onclick="clearResults()">Clear Results</button>
 
@@ -42,11 +43,6 @@
       <p><strong>Noun Search:</strong> Enter an adjective to find nouns commonly described with it. Example: Enter “fluffy” and get <em>pillow</em>, <em>bunny</em>, <em>cloud</em>.</p>
     </div>
 
-    <h1>Reveal the word of the day</h1>
-
-    <button onclick="getWordOfTheDay()">Get Word of the Day</button>
-
-    <div id="word-of-the-day"></div>
     <p>
       Created By FoundnHound
     </p>
