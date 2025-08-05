@@ -1,6 +1,5 @@
 const express = require('express');
 const datamuse = require('datamuse');
-const functions = require('./public/functions.js')
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
@@ -22,7 +21,6 @@ app.get('/api/hello', (req, res) => {
 
 app.post('/api/meansLike', (req, res) => {
   const text = req.body.text;
-  console.log(req.body.text);
 
   if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
     return res.status(400).json({ error: 'Invalid input' });
@@ -41,7 +39,6 @@ app.post('/api/meansLike', (req, res) => {
 
 app.post('/api/soundsLike', (req, res) => {
   const text = req.body.text;
-  console.log(req.body.text);
 
   if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
     return res.status(400).json({ error: 'Invalid input' });
@@ -60,7 +57,6 @@ app.post('/api/soundsLike', (req, res) => {
 
 app.post('/api/adjectiveThatDescribes', (req, res) => {
   const text = req.body.text;
-  console.log(req.body.text);
 
   if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
     return res.status(400).json({ error: 'Invalid input' });
@@ -79,7 +75,6 @@ app.post('/api/adjectiveThatDescribes', (req, res) => {
 
 app.post('/api/nounsThatAreDescribedBy', (req, res) => {
   const text = req.body.text;
-  console.log(req.body.text);
 
   if (typeof text !== 'string' || text.length === 0 || text.length > 100) {
     return res.status(400).json({ error: 'Invalid input' });
@@ -134,7 +129,6 @@ app.post('/api/defineWord', (req, res) => {
         res.json({ word, phonetic, definition });
       })
       .catch(err => {
-        console.error('Dictionary proxy error:', err);
         res.status(502).json({ error: 'Dictionary fetch failed' });
       });
 });

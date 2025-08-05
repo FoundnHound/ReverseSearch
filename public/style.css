@@ -143,14 +143,4 @@ textarea {
   font-size: 0.9em;
   padding: 0.8em;
   }
-
-  .reverse-search-button-group {
-  flex-direction: column;
-  align-items: center;
-  }
-
-  .reverse-search-button-group button {
-  width: 100%;
-  max-width: none;
-  }
 }

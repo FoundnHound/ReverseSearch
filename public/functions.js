@@ -4,12 +4,11 @@ function getBackendMessage() {
       .then(data => {
         document.getElementById('backend-message').innerText = data;
       });
-    //backend-message is the ID for the message used for when calling the backend
+    //backend-message is the ID for the message used for when calling the backend (Unsued)
   }
 
 function meansLikeSearch(){
   const text = document.getElementById('description').value //description is the textarea ID
-
   clearTextArea()
 
   fetch('/api/meansLike', {
@@ -19,7 +18,6 @@ function meansLikeSearch(){
   })
   .then(res => res.json())
   .then(data => {
-    console.log('Result: ', data.result);
     const output = document.getElementById("results");
     if (data.result.length === 0) {
       output.innerText = '';
@@ -71,7 +69,6 @@ function soundsLikeSearch(){
   })
   .then(res => res.json())
   .then(data => {
-    console.log('Result: ', data.result);
     const output = document.getElementById("results");
     if (data.result.length === 0) {
       output.innerText = '';
@@ -116,7 +113,6 @@ function adjectiveSearch(){
   })
   .then(res => res.json())
   .then(data => {
-    console.log('Result: ', data.result);
     const output = document.getElementById("results");
     if (data.result.length === 0) {
       output.innerText = '';
@@ -172,7 +168,6 @@ function nounSearch(){
   })
   .then(res => res.json())
   .then(data => {
-    console.log('Result: ', data.result);
     const output = document.getElementById("results");
     if (data.result.length === 0) {
       output.innerText = '';
@@ -219,7 +214,6 @@ function fetchDefinition(word, container) {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(`Definition for "${word}"`, data);
 
       const defText = document.createElement('p');
       defText.innerHTML = `<strong>Definition:</strong> ${data.definition || 'No definition found'}<br><strong>Phonetic:</strong> ${data.phonetic || 'N/A'}`;
@@ -228,7 +222,6 @@ function fetchDefinition(word, container) {
       container.appendChild(defText);
     })
     .catch(err => {
-      console.error(err);
       container.innerHTML = `<em>Failed to fetch definition. Too many requests please wait</em>`;
     });
 }
@@ -239,6 +232,10 @@ function defineWord() {
   error.textContent = ''; // Clear previous error message
   if (text.split(/\s+/).length > 1) {
     error.textContent = "Please enter only a single word for this search.";
+    return;
+  }
+  else if (text.length === 0) {
+    error.textContent = " ";
     return;
   }
   clearTextArea();
@@ -257,6 +254,7 @@ function defineWord() {
         error.textContent = data.error;
         return;
       }
+      const defintion = data.definition.replace(/<xref>(.*?)<\/xref>/g, "$1");
 
       const wordEl = document.createElement('div');
       wordEl.className = 'result-item';
@@ -268,7 +266,7 @@ function defineWord() {
 
       const defineDiv = document.createElement('div');
       defineDiv.className = 'definition';
-      defineDiv.innerText = data.definition || 'No definition available';
+      defineDiv.innerText = defintion || 'No definition available';
 
       if (data.phonetic) {
         const phoneticDiv = document.createElement('div');
@@ -284,7 +282,6 @@ function defineWord() {
       output.scrollIntoView({ behavior: 'smooth' });
     })
     .catch(err => {
-      console.error('Fetch error:', err);
       error.textContent = 'Failed to fetch definition';
     });
 }
@@ -319,6 +316,14 @@ function updateInputHint(type) {
     case 'noun':
       textarea.placeholder = "e.g., 'fluffy'";
       hint.textContent = "Enter a single adjective. The search will return nouns often described that way.";
+      break;
+    case 'defineWord':
+      textarea.placeholder = "e.g., 'acouasm'";
+      hint.textContent = "Enter a single word to get its definition.";
+      break;
+    case 'clearResults':
+      textarea.placeholder = "Enter your description here...";
+      hint.textContent = "Click a search button to see examples.";
       break;
     default:
       textarea.placeholder = "Enter your description here...";

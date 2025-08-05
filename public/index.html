@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="/dictionary.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <title>Almostgotit</title>
+    <title>AlmostGotIt</title>
 
   </head>
   <body>
-    <h1>I Almost Have It</h1>
+    <h1>Almost Got It</h1>
+    <h5>The Search and Reverse Search dictionary for all your searching needs</h5>
 
     <p id="backend-message"></p>
 
     
-    <textarea id="description" rows="10" cols="100" placeholder="Click on the searches to get examples on how to use them..."></textarea>
+    <textarea id="description" rows="10" cols="100" placeholder="Click on the searches without any input to get examples on how to use them..."></textarea>
     <p id="error-message" style="font-size:0.9em; color: red;"></p>
     <p id="input-hint" style="font-size: 0.9em; color: #555;"></p>
 
@@ -28,8 +30,8 @@
     </div>
 
     <div class = "clear-and-define">
-      <button onclick="clearResults()">Clear Results</button>
-      <button onclick="defineWord()">Define Word</button>
+      <button onclick="updateInputHint('clearResults'); clearResults()">Clear Results</button>
+      <button onclick="updateInputHint('defineWord'); defineWord()">Define Word</button>
     </div>
 
     <br> 
@@ -45,11 +47,14 @@
       <p><strong>Adjective Search:</strong> Enter a noun to find adjectives commonly used to describe it. Example: Enter “ocean” and get <em>vast</em>, <em>salty</em>, <em>blue</em>.</p>
 
       <p><strong>Noun Search:</strong> Enter an adjective to find nouns commonly described with it. Example: Enter “fluffy” and get <em>pillow</em>, <em>bunny</em>, <em>cloud</em>.</p>
+
+      <p><strong>Define Search:</strong> Enter a word to search for that words definition. Example: Enter "acouasm" and get <em>The perception of ringing, buzzing or hissing sounds that are not really there.</em></p>
     </div>
 
     <p>
       Created By FoundnHound.
     </p>
+    <a href="https://www.flaticon.com/free-icons/dictionary" title="dictionary icons">Dictionary icons created by lutfix - Flaticon</a>
     <script src="functions.js"></script>
   </body>
   </html>
